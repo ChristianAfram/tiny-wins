@@ -17,9 +17,9 @@ struct StreakService {
         self.calendar = calendar
     }
 
-    /// Counts consecutive completed days ending today (or the most recent
-    /// completed day if today is not yet completed... actually walks back
-    /// from today and stops at the first gap).
+    /// Counts consecutive completed days ending today. If today is not yet
+    /// completed, the streak is based on yesterday instead, since the
+    /// current day hasn't ended and shouldn't break the streak yet.
     func currentStreak(records: [DailyWin], now: Date = Date()) -> Int {
         let completedKeys = Set(
             records
@@ -29,6 +29,14 @@ struct StreakService {
 
         var streak = 0
         var cursor = calendar.startOfDay(for: now)
+
+        if !completedKeys.contains(dateKeyService.dateKey(for: cursor)) {
+            guard let yesterday = calendar.date(byAdding: .day, value: -1, to: cursor) else {
+                return 0
+            }
+
+            cursor = yesterday
+        }
 
         while true {
             let key = dateKeyService.dateKey(for: cursor)
