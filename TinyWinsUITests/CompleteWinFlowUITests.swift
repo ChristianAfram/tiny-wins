@@ -56,6 +56,26 @@ final class CompleteWinFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Walk for 5 minutes"].waitForExistence(timeout: 5))
     }
 
+    func testUserCanCreateCustomWin() {
+        let app = XCUIApplication()
+        app.launchArguments += ["UI-TESTING-RESET-STATE"]
+        app.launch()
+
+        completeOnboardingIfNeeded(app)
+
+        XCTAssertTrue(app.buttons["Choose a tiny win"].waitForExistence(timeout: 5))
+        app.buttons["Choose a tiny win"].tap()
+
+        let textField = app.textFields["Describe your tiny win"]
+        XCTAssertTrue(textField.waitForExistence(timeout: 5))
+        textField.tap()
+        textField.typeText("Read for 10 minutes")
+
+        app.buttons["Save"].tap()
+
+        XCTAssertTrue(app.staticTexts["Read for 10 minutes"].waitForExistence(timeout: 5))
+    }
+
     func testHistoryShowsTodayAfterCompletingWin() {
         let app = XCUIApplication()
         app.launchArguments += ["UI-TESTING-RESET-STATE"]
