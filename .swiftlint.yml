@@ -14,3 +14,6 @@ identifier_name:
 
 type_name:
   min_length: 3
+
+large_tuple:
+  warning: 3
