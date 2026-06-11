@@ -23,6 +23,7 @@ struct OnboardingView: View {
                     step = 1
                 } else {
                     onboardingCompleted = true
+                    DebugMetricsLogger.log(.onboardingCompleted)
                 }
             }
             .buttonStyle(.borderedProminent)
