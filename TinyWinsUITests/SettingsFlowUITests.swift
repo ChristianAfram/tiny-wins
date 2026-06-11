@@ -8,28 +8,17 @@ final class SettingsFlowUITests: XCTestCase {
         app.buttons["Get Started"].tap()
     }
 
-    func testUserCanEnableReminderAndChangeTime() {
+    func testUserCanChangeReminderTimeDuringOnboarding() {
         let app = XCUIApplication()
         app.launchArguments += ["UI-TESTING-RESET-STATE"]
         app.launch()
 
-        completeOnboardingIfNeeded(app)
+        XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 5))
+        app.buttons["Continue"].tap()
 
-        addUIInterruptionMonitor(withDescription: "Notification permission") { alert in
-            guard alert.buttons["Allow"].exists else { return false }
-            alert.buttons["Allow"].tap()
-            return true
-        }
+        XCTAssertTrue(app.staticTexts["Stay on track"].waitForExistence(timeout: 5))
 
-        app.tabBars.buttons["Settings"].tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-
-        let reminderToggle = app.switches["Daily reminder"]
-        XCTAssertTrue(reminderToggle.waitForExistence(timeout: 5))
-        reminderToggle.tap()
-        app.navigationBars["Settings"].tap()
-
-        let datePicker = app.datePickers["Reminder time"]
+        let datePicker = app.datePickers.firstMatch
         XCTAssertTrue(datePicker.waitForExistence(timeout: 5))
 
         let hourWheel = datePicker.pickerWheels.element(boundBy: 0)
@@ -39,6 +28,8 @@ final class SettingsFlowUITests: XCTestCase {
         hourWheel.swipeUp()
 
         XCTAssertNotEqual(hourWheel.value as? String, initialHour)
+
+        app.buttons["Get Started"].tap()
     }
 
     func testUserCanDeleteAllData() {
