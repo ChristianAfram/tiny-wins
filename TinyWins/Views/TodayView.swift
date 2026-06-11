@@ -60,6 +60,12 @@ struct TodayView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+
+                Button("Edit") {
+                    viewModel.beginEditingTodayWin()
+                    showingSuggestionPicker = true
+                }
+                .buttonStyle(.bordered)
             }
         }
         .padding()

@@ -1,0 +1,16 @@
+excluded:
+  - .build
+  - TinyWins.xcodeproj
+
+line_length:
+  warning: 150
+  error: 250
+
+identifier_name:
+  min_length:
+    warning: 2
+  excluded:
+    - id
+
+type_name:
+  min_length: 3

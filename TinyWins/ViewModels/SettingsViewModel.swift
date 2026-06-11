@@ -46,13 +46,17 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func enableReminders() async {
+        DebugMetricsLogger.log(.reminderPermissionRequested)
+
         do {
             let granted = try await notificationService.requestPermission()
             notificationPermissionGranted = granted
             reminderEnabled = granted
 
             if granted {
+                DebugMetricsLogger.log(.reminderPermissionGranted)
                 await notificationService.scheduleDailyReminder(hour: reminderHour, minute: reminderMinute)
+                DebugMetricsLogger.log(.reminderScheduled)
             }
         } catch {
             assertionFailure("Failed to request notification permission: \(error)")
@@ -65,6 +69,7 @@ final class SettingsViewModel: ObservableObject {
             notificationService.cancelDailyReminder()
             reminderEnabled = false
             deleteConfirmationMessage = "All local data has been deleted."
+            DebugMetricsLogger.log(.deleteAllDataTriggered)
         } catch {
             assertionFailure("Failed to delete all data: \(error)")
         }

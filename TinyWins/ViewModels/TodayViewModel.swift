@@ -52,21 +52,36 @@ final class TodayViewModel: ObservableObject {
         customTitle = ""
     }
 
+    /// Pre-fills the picker fields so the user can edit today's win before
+    /// completing it.
+    func beginEditingTodayWin() {
+        guard let win = todayWin else { return }
+        customTitle = win.title
+        selectedCategory = win.category
+    }
+
     func markComplete() {
         guard todayWin != nil, !isCompleted else { return }
 
         do {
             try repository.markCompleted(dateKey: todayKey, completedAt: Date())
             loadToday()
+            DebugMetricsLogger.log(.winCompleted)
         } catch {
             assertionFailure("Failed to mark win complete: \(error)")
         }
     }
 
     private func save(title: String, category: WinCategory) {
+        let isNewWin = todayWin == nil
+
         do {
             try repository.upsertWin(dateKey: todayKey, title: title, category: category)
             loadToday()
+
+            if isNewWin {
+                DebugMetricsLogger.log(.winCreated)
+            }
         } catch {
             assertionFailure("Failed to save today's win: \(error)")
         }

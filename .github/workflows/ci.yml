@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Check PrivacyInfo.xcprivacy exists
+        run: test -f TinyWins/Resources/PrivacyInfo.xcprivacy
+
+      - name: Run SwiftLint
+        run: |
+          brew install swiftlint
+          swiftlint lint
+
+      - name: Build and test
+        run: |
+          xcodebuild test \
+            -project TinyWins.xcodeproj \
+            -scheme TinyWins \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO

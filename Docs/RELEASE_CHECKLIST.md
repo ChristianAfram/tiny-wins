@@ -26,8 +26,15 @@ Do not release if any of the following are true:
 - [ ] App builds for Release configuration
 - [ ] All unit tests pass (`TinyWinsTests`)
 - [ ] All UI tests pass (`TinyWinsUITests`)
+- [ ] CI workflow (`.github/workflows/ci.yml`) is green
 - [ ] No forbidden third-party SDKs added
 - [ ] App version/build number updated
+
+## Assets
+
+- [ ] Replace the placeholder `AppIcon` slot in
+      `TinyWins/Assets.xcassets/AppIcon.appiconset` with a real 1024x1024 PNG
+      before App Store submission
 
 ## Manual QA Checklist
 
